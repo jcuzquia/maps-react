@@ -1,9 +1,9 @@
-import { Map } from "mapbox-gl";
 import { useLayoutEffect, useRef } from "react";
 import { Loading } from ".";
 import { usePlacesStore } from "../stores";
-import { useMapStore } from "../stores/map/map.store";
 import "./../index.css";
+import { Map } from "mapbox-gl";
+import { useMapStore } from "../stores/map/map.store";
 export const MapView = () => {
   const userLocation = usePlacesStore((state) => state.userLocation);
   const isLoading = usePlacesStore((state) => state.isLoading);
@@ -13,15 +13,15 @@ export const MapView = () => {
 
   useLayoutEffect(() => {
     if (!isLoading) {
-      const m = new Map({
+      const map = new Map({
         container: mapDiv.current!, // container ID
         style: "mapbox://styles/mapbox/streets-v12", // style URL
         center: userLocation, // starting position [lng, lat]
         zoom: 14, // starting zoom
       });
-      setMap(m);
+      setMap(map);
     }
-  }, [isLoading, userLocation]);
+  }, [isLoading, userLocation, setMap]);
 
   if (isLoading) {
     return <Loading />;
@@ -36,6 +36,8 @@ export const MapView = () => {
         position: "fixed",
         top: 0,
       }}
-    ></div>
+    >
+      {userLocation?.join(",")}
+    </div>
   );
 };
